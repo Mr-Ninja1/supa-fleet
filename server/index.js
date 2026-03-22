@@ -2,12 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, '../client/dist');
+const clientIndexPath = path.join(clientDistPath, 'index.html');
+const hasClientBuild = fs.existsSync(clientIndexPath);
 
 const PORT = process.env.PORT || 4000;
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -49,7 +58,7 @@ function classifyStatus(distanceMeters) {
   return 'far';
 }
 
-app.get('/', (_req, res) => {
+app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Supa-Fleet API gateway' });
 });
 
@@ -86,6 +95,21 @@ app.post('/location', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+if (hasClientBuild) {
+  app.use(express.static(clientDistPath));
+
+  app.get('*', (_req, res) => {
+    res.sendFile(clientIndexPath);
+  });
+} else {
+  app.get('/', (_req, res) => {
+    res.json({
+      status: 'ok',
+      message: 'Supa-Fleet API gateway (client build not found)'
+    });
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Supa-Fleet API listening on port ${PORT}`);
