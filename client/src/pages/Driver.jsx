@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000')
 
 function getOrCreateDeviceId() {
   if (typeof window === 'undefined') return 'unknown-device'
@@ -56,8 +56,9 @@ function Driver() {
           })
 
           if (!res.ok) {
-            console.error('Failed to send location', await res.text())
-            setError('Failed to send location to server.')
+            const text = await res.text()
+            console.error('Failed to send location', text)
+            setError(`Failed to send location to server: ${text || res.status}`)
           } else {
             const data = await res.json()
             setStatus(`Tracking: ${data.status} (${Math.round(data.distance_meters)} m from base)`)
