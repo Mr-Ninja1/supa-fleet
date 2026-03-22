@@ -47,6 +47,9 @@ function FlyToSelected({ selected }) {
 
 export function FleetMap({ vehicles, selected }) {
   const markers = useMemo(() => vehicles ?? [], [vehicles])
+  const labelMap = useMemo(() => {
+    return new Map((vehicles ?? []).map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
+  }, [vehicles])
   const [satellite, setSatellite] = useState(false)
 
   return (
@@ -81,7 +84,7 @@ export function FleetMap({ vehicles, selected }) {
 
         {markers.map((v) => {
           if (typeof v.last_lat !== 'number' || typeof v.last_lng !== 'number') return null
-          const name = v.nickname || v.device_id
+          const name = labelMap.get(v.id) || v.nickname || 'GPS'
           const isImmediate = v.current_status === 'immediate'
           const icon = isImmediate ? immediateIcon : baseIcon
 
@@ -93,9 +96,6 @@ export function FleetMap({ vehicles, selected }) {
               <Popup>
                 <div className="text-sm">
                   <p className="font-semibold mb-1">{name}</p>
-                  {v.nickname && (
-                    <p className="text-xs text-slate-500 mb-1">Device: {v.device_id}</p>
-                  )}
                   <p className="text-xs text-slate-500 mb-1">
                     Status: <span className="uppercase">{v.current_status}</span>
                   </p>

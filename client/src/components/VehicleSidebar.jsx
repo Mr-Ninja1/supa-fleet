@@ -20,9 +20,10 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
 
   const decorated = useMemo(
     () =>
-      vehicles.map((v) => {
+      vehicles.map((v, index) => {
         const isOnline = Date.now() - new Date(v.last_ping).getTime() < ONLINE_WINDOW_MS
-        return { ...v, isOnline }
+        const fallbackName = `GPS ${index + 1}`
+        return { ...v, isOnline, fallbackName }
       }),
     [vehicles],
   )
@@ -67,8 +68,7 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
 
         <ul className="divide-y divide-slate-800">
           {decorated.map((v) => {
-            const label = v.nickname || v.device_id
-            const secondary = v.nickname ? v.device_id : null
+            const label = v.nickname || v.fallbackName
             const nicknameLabel = v.nickname || 'Not set'
             return (
               <li key={v.id} className="px-3 py-2.5 text-base md:text-lg text-slate-100 flex flex-col gap-1">
@@ -91,9 +91,6 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
                     Rename
                   </button>
                 </div>
-                {secondary && (
-                  <p className="text-xs md:text-sm text-slate-500 pl-5 truncate">{secondary}</p>
-                )}
                 <p className="text-xs md:text-sm text-slate-400 pl-5">
                   Nickname: <span className="text-slate-200">{nicknameLabel}</span>
                 </p>

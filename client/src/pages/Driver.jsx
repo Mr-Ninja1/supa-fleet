@@ -33,10 +33,6 @@ function Driver() {
   const [lastCoords, setLastCoords] = useState(null)
   const [error, setError] = useState(null)
   const [wakeLockActive, setWakeLockActive] = useState(false)
-  const [nickname, setNickname] = useState(() => {
-    if (typeof window === 'undefined') return ''
-    return window.localStorage.getItem('supa_fleet_nickname') || ''
-  })
 
   useEffect(() => {
     if (!('geolocation' in navigator)) {
@@ -68,7 +64,6 @@ function Driver() {
               longitude,
               // speed is in m/s from the Geolocation API when available
               speed: typeof speed === 'number' ? speed : null,
-              nickname: nickname && nickname.trim() !== '' ? nickname.trim() : null,
             }),
           })
 
@@ -156,22 +151,6 @@ function Driver() {
       </div>
 
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
-        <div>
-          <p className="text-xs font-medium text-slate-300 mb-1">Driver nickname (optional)</p>
-          <input
-            type="text"
-            value={nickname}
-            onChange={(e) => {
-              setNickname(e.target.value)
-              if (typeof window !== 'undefined') {
-                window.localStorage.setItem('supa_fleet_nickname', e.target.value)
-              }
-            }}
-            placeholder="e.g. Truck 01 - Musa"
-            className="w-full rounded bg-slate-950 border border-slate-700 px-3 py-1.5 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-          />
-        </div>
-
         <p className="font-medium mb-1">Status</p>
         <p className="text-emerald-400 text-sm mb-2">{status}</p>
         {lastCoords && (
