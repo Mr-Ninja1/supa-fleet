@@ -5,7 +5,7 @@ import { FleetMap } from '../components/FleetMap'
 import { useVehicles } from '../hooks/useVehicles'
 
 function Dashboard() {
-  const { vehicles, loading, error, updateNickname } = useVehicles()
+  const { vehicles, loading, error, updateNickname, removeVehicle } = useVehicles()
   const [selectedId, setSelectedId] = useState(null)
   const driverUrl = useMemo(
     () => (typeof window !== 'undefined' ? `${window.location.origin}/driver` : ''),
@@ -46,8 +46,10 @@ function Dashboard() {
           vehicles={vehicles}
           loading={loading}
           error={error}
+          selectedId={selectedId}
           onSelect={(v) => setSelectedId(v.id)}
           onUpdateNickname={updateNickname}
+          onRemove={removeVehicle}
         />
         <section className="flex-1 flex flex-col p-3 md:p-4 gap-3 bg-slate-950">
           <FleetMap vehicles={vehicles} selected={selected} />

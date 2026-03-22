@@ -51,7 +51,7 @@ export function FleetMap({ vehicles, selected }) {
     const sorted = [...(vehicles ?? [])].sort((a, b) => (a.device_id || '').localeCompare(b.device_id || ''))
     return new Map(sorted.map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
   }, [vehicles])
-  const [satellite, setSatellite] = useState(false)
+  const [satellite, setSatellite] = useState(true)
 
   return (
     <div className="flex-1 min-h-[320px] bg-slate-900 relative">
@@ -70,10 +70,16 @@ export function FleetMap({ vehicles, selected }) {
         className="w-full h-full rounded-lg overflow-hidden"
       >
         {satellite ? (
-          <TileLayer
-            attribution="Tiles &copy; Esri"
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          />
+          <>
+            <TileLayer
+              attribution="Tiles &copy; Esri"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            />
+            <TileLayer
+              attribution="Labels &copy; Esri"
+              url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+            />
+          </>
         ) : (
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
@@ -91,7 +97,7 @@ export function FleetMap({ vehicles, selected }) {
 
           return (
             <Marker key={v.id} position={[v.last_lat, v.last_lng]} icon={icon} riseOnHover>
-              <Tooltip direction="top" offset={[0, -28]} permanent>
+              <Tooltip direction="top" offset={[0, -60]} permanent className="fleet-label">
                 {name}
               </Tooltip>
               <Popup>

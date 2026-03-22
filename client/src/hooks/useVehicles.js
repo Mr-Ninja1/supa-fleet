@@ -82,5 +82,20 @@ export function useVehicles() {
     }
   }
 
-  return { vehicles, loading, error, updateNickname }
+  const removeVehicle = async (vehicleId) => {
+    if (!supabase) return
+    const { error: err } = await supabase
+      .from('vehicles')
+      .delete()
+      .eq('id', vehicleId)
+
+    if (err) {
+      console.error('Error deleting vehicle:', err)
+      setError('Failed to remove device')
+    } else {
+      setError(null)
+    }
+  }
+
+  return { vehicles, loading, error, updateNickname, removeVehicle }
 }

@@ -14,7 +14,7 @@ function formatTimeAgo(iso) {
   return `${hours}h ago`
 }
 
-export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNickname }) {
+export function VehicleSidebar({ vehicles, loading, error, selectedId, onSelect, onUpdateNickname, onRemove }) {
   const [editingId, setEditingId] = useState(null)
   const [draftNickname, setDraftNickname] = useState('')
 
@@ -23,14 +23,18 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
     return new Map(sorted.map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
   }, [vehicles])
 
-  const decorated = useMemo(
-    () =>
-      vehicles.map((v) => {
+  const decorated = useMemo(() => {
+    return [...vehicles]
+      .map((v) => {
         const isOnline = Date.now() - new Date(v.last_ping).getTime() < ONLINE_WINDOW_MS
         return { ...v, isOnline }
-      }),
-    [vehicles],
-  )
+      })
+      .sort((a, b) => {
+        if (selectedId && a.id === selectedId) return -1
+        if (selectedId && b.id === selectedId) return 1
+        return (b.last_ping || '').localeCompare(a.last_ping || '')
+      })
+  }, [vehicles, selectedId])
 
   const startEdit = (vehicle) => {
     setEditingId(vehicle.id)
@@ -88,13 +92,33 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
                     />
                     <span className="truncate font-medium">{label}</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => startEdit(v)}
-                    className="text-sm md:text-base px-2 py-1 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
-                  >
-                    {renameLabel}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onSelect?.(v)}
+                      className="text-sm md:text-base px-2 py-1 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
+                    >
+                      Focus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => startEdit(v)}
+                      className="text-sm md:text-base px-2 py-1 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
+                    >
+                      {renameLabel}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!onRemove) return
+                        const confirmed = window.confirm('Remove this device from the fleet list?')
+                        if (confirmed) onRemove(v.id)
+                      }}
+                      className="text-sm md:text-base px-2 py-1 rounded border border-rose-500/60 text-rose-200 hover:bg-rose-500/10"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
                 <p className="text-xs md:text-sm text-slate-400 pl-5">
                   Nickname: <span className="text-slate-200">{nicknameLabel}</span>
