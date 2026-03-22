@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet'
 import L from 'leaflet'
 
@@ -47,18 +47,35 @@ function FlyToSelected({ selected }) {
 
 export function FleetMap({ vehicles, selected }) {
   const markers = useMemo(() => vehicles ?? [], [vehicles])
+  const [satellite, setSatellite] = useState(false)
 
   return (
-    <div className="flex-1 min-h-[320px] bg-slate-900">
+    <div className="flex-1 min-h-[320px] bg-slate-900 relative">
+      <div className="absolute right-4 top-4 z-[1000]">
+        <button
+          type="button"
+          onClick={() => setSatellite((current) => !current)}
+          className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1.5 text-xs md:text-sm text-slate-100 shadow-lg"
+        >
+          {satellite ? 'Map view' : 'Satellite view'}
+        </button>
+      </div>
       <MapContainer
         center={[HOME_LAT, HOME_LNG]}
         zoom={13}
         className="w-full h-full rounded-lg overflow-hidden"
       >
-        <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {satellite ? (
+          <TileLayer
+            attribution="Tiles &copy; Esri"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        ) : (
+          <TileLayer
+            attribution="&copy; OpenStreetMap contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        )}
 
         <FlyToSelected selected={selected} />
 
@@ -70,7 +87,7 @@ export function FleetMap({ vehicles, selected }) {
 
           return (
             <Marker key={v.id} position={[v.last_lat, v.last_lng]} icon={icon} riseOnHover>
-              <Tooltip direction="top" offset={[0, -24]} permanent={false}>
+              <Tooltip direction="top" offset={[0, -28]} permanent>
                 {name}
               </Tooltip>
               <Popup>

@@ -2,12 +2,29 @@ import { useEffect, useState } from 'react'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000')
 
+function getCookie(name) {
+  if (typeof document === 'undefined') return null
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+function setCookie(name, value, days = 365) {
+  if (typeof document === 'undefined') return
+  const maxAge = days * 24 * 60 * 60
+  document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`
+}
+
 function getOrCreateDeviceId() {
   if (typeof window === 'undefined') return 'unknown-device'
-  const existing = window.localStorage.getItem('supa_fleet_device_id')
-  if (existing) return existing
+  const existing = window.localStorage.getItem('supa_fleet_device_id') || getCookie('supa_fleet_device_id')
+  if (existing) {
+    window.localStorage.setItem('supa_fleet_device_id', existing)
+    setCookie('supa_fleet_device_id', existing)
+    return existing
+  }
   const id = crypto.randomUUID ? crypto.randomUUID() : `device-${Date.now()}`
   window.localStorage.setItem('supa_fleet_device_id', id)
+  setCookie('supa_fleet_device_id', id)
   return id
 }
 

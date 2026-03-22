@@ -69,6 +69,7 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
           {decorated.map((v) => {
             const label = v.nickname || v.device_id
             const secondary = v.nickname ? v.device_id : null
+            const nicknameLabel = v.nickname || 'Not set'
             return (
               <li key={v.id} className="px-3 py-2.5 text-base md:text-lg text-slate-100 flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-2">
@@ -87,12 +88,15 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
                     onClick={() => startEdit(v)}
                     className="text-sm md:text-base px-2 py-1 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
                   >
-                    Edit
+                    Rename
                   </button>
                 </div>
                 {secondary && (
                   <p className="text-xs md:text-sm text-slate-500 pl-5 truncate">{secondary}</p>
                 )}
+                <p className="text-xs md:text-sm text-slate-400 pl-5">
+                  Nickname: <span className="text-slate-200">{nicknameLabel}</span>
+                </p>
                 <div className="flex items-center justify-between pl-5 pr-1 text-xs md:text-sm text-slate-500">
                   <span className="uppercase tracking-wide">{v.current_status}</span>
                   <span>{formatTimeAgo(v.last_ping)}</span>
