@@ -1,0 +1,106 @@
+<svg
+  width="512"
+  height="512"
+  viewBox="0 0 512 512"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient id="sf-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <linearGradient id="sf-pin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+
+    <radialGradient id="sf-core" cx="50%" cy="35%" r="40%">
+      <stop offset="0%" stop-color="#e5ff3b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+
+    <linearGradient id="sf-wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e5ff3b"/>
+      <stop offset="100%" stop-color="#f9fafb"/>
+    </linearGradient>
+
+    <radialGradient id="sf-vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="60%" stop-color="#00000000"/>
+      <stop offset="100%" stop-color="#00000059"/>
+    </radialGradient>
+  </defs>
+
+  <rect
+    x="0"
+    y="0"
+    width="512"
+    height="512"
+    rx="120"
+    fill="url(#sf-bg)"
+  />
+  <rect
+    x="0"
+    y="0"
+    width="512"
+    height="512"
+    rx="120"
+    fill="url(#sf-vignette)"
+  />
+
+  <g transform="translate(256 260)">
+    <path
+      d="
+        M 0 -150
+        C 70 -150 120 -95 120 -35
+        C 120 20 85 70 0 150
+        C -85 70 -120 20 -120 -35
+        C -120 -95 -70 -150 0 -150
+        Z
+      "
+      fill="url(#sf-pin)"
+    />
+
+    <circle
+      cx="0"
+      cy="-60"
+      r="46"
+      fill="url(#sf-core)"
+    />
+    <circle
+      cx="0"
+      cy="-60"
+      r="22"
+      fill="#020617"
+      fill-opacity="0.75"
+    />
+  </g>
+
+  <g transform="translate(256 210)" stroke="url(#sf-wave)" stroke-width="14" stroke-linecap="round">
+    <path
+      d="M -56 -8 A 72 72 0 0 1 56 -8"
+      fill="none"
+      stroke-opacity="0.95"
+    />
+    <path
+      d="M -88 -32 A 104 104 0 0 1 88 -32"
+      fill="none"
+      stroke-opacity="0.7"
+    />
+    <path
+      d="M -120 -60 A 140 140 0 0 1 120 -60"
+      fill="none"
+      stroke-opacity="0.45"
+    />
+  </g>
+
+  <ellipse
+    cx="256"
+    cy="376"
+    rx="108"
+    ry="32"
+    fill="#000000"
+    fill-opacity="0.35"
+  />
+</svg>

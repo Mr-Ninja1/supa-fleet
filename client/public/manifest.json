@@ -1,0 +1,18 @@
+{
+  "name": "Supa-Fleet",
+  "short_name": "SupaFleet",
+  "description": "Real-time GPS fleet tracking with Supabase and React.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "/icons/supa-fleet-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
