@@ -148,6 +148,15 @@ function Driver() {
           This device is acting as a GPS beacon. Keep this page open while
           driving.
         </p>
+        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-3 text-left text-sm text-slate-300">
+          <p className="font-semibold text-slate-100 mb-1">Need to see the live map?</p>
+          <p>
+            Open the Command Center on another device (desktop or tablet) to
+            monitor all vehicles. On phones, go back to the home screen and
+            choose <span className="text-slate-100">Track using this device</span>
+            to launch the dashboard.
+          </p>
+        </div>
       </div>
 
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
