@@ -48,7 +48,8 @@ function FlyToSelected({ selected }) {
 export function FleetMap({ vehicles, selected }) {
   const markers = useMemo(() => vehicles ?? [], [vehicles])
   const labelMap = useMemo(() => {
-    return new Map((vehicles ?? []).map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
+    const sorted = [...(vehicles ?? [])].sort((a, b) => (a.device_id || '').localeCompare(b.device_id || ''))
+    return new Map(sorted.map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
   }, [vehicles])
   const [satellite, setSatellite] = useState(false)
 

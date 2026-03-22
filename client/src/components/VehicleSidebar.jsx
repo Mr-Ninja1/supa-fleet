@@ -18,12 +18,16 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
   const [editingId, setEditingId] = useState(null)
   const [draftNickname, setDraftNickname] = useState('')
 
+  const labelMap = useMemo(() => {
+    const sorted = [...vehicles].sort((a, b) => (a.device_id || '').localeCompare(b.device_id || ''))
+    return new Map(sorted.map((v, index) => [v.id, v.nickname || `GPS ${index + 1}`]))
+  }, [vehicles])
+
   const decorated = useMemo(
     () =>
-      vehicles.map((v, index) => {
+      vehicles.map((v) => {
         const isOnline = Date.now() - new Date(v.last_ping).getTime() < ONLINE_WINDOW_MS
-        const fallbackName = `GPS ${index + 1}`
-        return { ...v, isOnline, fallbackName }
+        return { ...v, isOnline }
       }),
     [vehicles],
   )
@@ -68,8 +72,9 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
 
         <ul className="divide-y divide-slate-800">
           {decorated.map((v) => {
-            const label = v.nickname || v.fallbackName
+            const label = labelMap.get(v.id) || 'GPS'
             const nicknameLabel = v.nickname || 'Not set'
+            const renameLabel = v.nickname ? 'Rename' : 'Set name'
             return (
               <li key={v.id} className="px-3 py-2.5 text-base md:text-lg text-slate-100 flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-2">
@@ -88,7 +93,7 @@ export function VehicleSidebar({ vehicles, loading, error, onSelect, onUpdateNic
                     onClick={() => startEdit(v)}
                     className="text-sm md:text-base px-2 py-1 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
                   >
-                    Rename
+                    {renameLabel}
                   </button>
                 </div>
                 <p className="text-xs md:text-sm text-slate-400 pl-5">
